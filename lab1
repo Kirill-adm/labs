@@ -1,39 +1,32 @@
 using System;
-using System.Linq;
 
 class Program
 {
-    static void Main(string[] args)
+    static void Main()
     {
-        while (true)
+        Console.WriteLine("Выберите задание (1 или 2):");
+        string choice = Console.ReadLine();
+
+        switch (choice)
         {
-            Console.WriteLine("Выберите задание (1 или 2), или введите 0 для выхода:");
-            string choice = Console.ReadLine();
-            if (choice == "0") break;
-            else if (choice == "1") Task1();
-            else if (choice == "2") Task2();
-            else Console.WriteLine("Неверный выбор.");
+            case "1":
+                Task1();
+                break;
+            case "2":
+                Task2();
+                break;
+            default:
+                Console.WriteLine("Неверный выбор.");
+                break;
         }
     }
 
     static void Task1()
     {
-        Console.WriteLine("Задание 1: Вычисление a^n");
-        int a, n;
-
         Console.Write("Введите a (натуральное число): ");
-        if (!int.TryParse(Console.ReadLine(), out a) || a < 1)
-        {
-            Console.WriteLine("Ошибка: a должно быть натуральным числом.");
-            return;
-        }
-
+        int a = int.Parse(Console.ReadLine());
         Console.Write("Введите n (натуральное число): ");
-        if (!int.TryParse(Console.ReadLine(), out n) || n < 1)
-        {
-            Console.WriteLine("Ошибка: n должно быть натуральным числом.");
-            return;
-        }
+        int n = int.Parse(Console.ReadLine());
 
         int result = 1;
         for (int i = 0; i < n; i++)
@@ -41,36 +34,22 @@ class Program
             result *= a;
         }
 
-        Console.WriteLine($"Результат: {a}^{n} = {result}");
+        Console.WriteLine($"{a}^{n} = {result}");
     }
 
     static void Task2()
     {
-        Console.WriteLine("Задание 2: Поиск числа n после преобразования x");
         Console.Write("Введите x (x >= 100): ");
-        string xStr = Console.ReadLine().Trim();
+        string x = Console.ReadLine();
 
-        if (!xStr.All(char.IsDigit))
+        if (x.Length < 3)
         {
-            Console.WriteLine("Ошибка: x должно состоять только из цифр.");
+            Console.WriteLine("Число должно содержать минимум 3 цифры.");
             return;
         }
 
-        if (xStr.Length < 3)
-        {
-            Console.WriteLine("Ошибка: x должно содержать минимум 3 цифры.");
-            return;
-        }
-
-        if (xStr[0] == '0')
-        {
-            Console.WriteLine("Ошибка: x не может начинаться с нуля.");
-            return;
-        }
-
-        char secondDigit = xStr[1];
-        string newStr = xStr.Remove(1, 1) + secondDigit;
-
-        Console.WriteLine($"Результат: n = {newStr}");
+        char secondDigit = x[1];
+        string newNumber = x.Remove(1, 1) + secondDigit;
+        Console.WriteLine($"n = {newNumber}");
     }
 }
