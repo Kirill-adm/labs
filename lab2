@@ -1,0 +1,288 @@
+using System;
+using System.Collections.Generic;
+
+// Главный класс для документа
+public class Document
+{
+    // Общие свойства для всех документов
+    public string Name { get; set; }
+    public string Author { get; set; }
+    public List<string> Keywords = new List<string>();
+    public string Topic { get; set; }
+    public string Path { get; set; }
+
+    // Метод для показа информации
+    public virtual void ShowInfo()
+    {
+        Console.WriteLine("Название: " + Name);
+        Console.WriteLine("Автор: " + Author);
+        Console.WriteLine("Тема: " + Topic);
+        Console.WriteLine("Путь: " + Path);
+        Console.Write("Ключевые слова: ");
+        foreach (string word in Keywords)
+        {
+            Console.Write(word + ", ");
+        }
+        Console.WriteLine("\n");
+    }
+}
+
+// Класс для Word документов
+public class WordDoc : Document
+{
+    // Специальное свойство только для Word
+    public int Pages { get; set; }
+    
+    public override void ShowInfo()
+    {
+        base.ShowInfo();
+        Console.WriteLine("Тип: Word");
+        Console.WriteLine("Страниц: " + Pages);
+        Console.WriteLine();
+    }
+}
+
+// Класс для PDF документов
+public class PdfDoc : Document
+{
+    // Специальное свойство только для PDF
+    public bool IsProtected { get; set; }
+    
+    public override void ShowInfo()
+    {
+        base.ShowInfo();
+        Console.WriteLine("Тип: PDF");
+        Console.WriteLine("Защита: " + (IsProtected ? "Да" : "Нет"));
+        Console.WriteLine();
+    }
+}
+
+// Класс для Excel документов
+public class ExcelDoc : Document
+{
+    // Специальное свойство только для Excel
+    public int Sheets { get; set; }
+    
+    public override void ShowInfo()
+    {
+        base.ShowInfo();
+        Console.WriteLine("Тип: Excel");
+        Console.WriteLine("Листов: " + Sheets);
+        Console.WriteLine();
+    }
+}
+
+// Класс для текстовых файлов
+public class TxtDoc : Document
+{
+    // Специальное свойство только для TXT
+    public string Encoding { get; set; }
+    
+    public override void ShowInfo()
+    {
+        base.ShowInfo();
+        Console.WriteLine("Тип: Текстовый файл");
+        Console.WriteLine("Кодировка: " + Encoding);
+        Console.WriteLine();
+    }
+}
+
+// Класс для HTML документов
+public class HtmlDoc : Document
+{
+    // Специальное свойство только для HTML
+    public int Links { get; set; }
+    
+    public override void ShowInfo()
+    {
+        base.ShowInfo();
+        Console.WriteLine("Тип: HTML");
+        Console.WriteLine("Ссылок: " + Links);
+        Console.WriteLine();
+    }
+}
+
+// Менеджер документов (Singleton)
+public class DocManager
+{
+    // Это нужно для Singleton
+    private static DocManager _instance;
+    
+    // Список всех документов
+    private List<Document> allDocs = new List<Document>();
+    
+    // Закрытый конструктор
+    private DocManager() {}
+    
+    // Получение экземпляра менеджера
+    public static DocManager GetInstance()
+    {
+        if (_instance == null)
+        {
+            _instance = new DocManager();
+        }
+        return _instance;
+    }
+    
+    // Добавить документ
+    public void AddDocument(Document doc)
+    {
+        allDocs.Add(doc);
+        Console.WriteLine("Документ добавлен!\n");
+    }
+    
+    // Показать все документы
+    public void ShowAll()
+    {
+        if (allDocs.Count == 0)
+        {
+            Console.WriteLine("Еще нет документов!\n");
+            return;
+        }
+        
+        Console.WriteLine("\n=== ВСЕ ДОКУМЕНТЫ ===");
+        foreach (Document doc in allDocs)
+        {
+            doc.ShowInfo();
+            Console.WriteLine("----------------------");
+        }
+    }
+    
+    // Главное меню
+    public void ShowMenu()
+    {
+        while (true)
+        {
+            Console.WriteLine("1. Добавить документ");
+            Console.WriteLine("2. Показать все документы");
+            Console.WriteLine("3. Выход");
+            Console.Write("Выберите: ");
+            
+            string choice = Console.ReadLine();
+            
+            if (choice == "1")
+            {
+                AddDocumentMenu();
+            }
+            else if (choice == "2")
+            {
+                ShowAll();
+            }
+            else if (choice == "3")
+            {
+                Console.WriteLine("Выход...");
+                break;
+            }
+            else
+            {
+                Console.WriteLine("Не понял, попробуйте еще раз!\n");
+            }
+        }
+    }
+    
+    // Меню добавления документа
+    private void AddDocumentMenu()
+    {
+        Console.WriteLine("\nВыберите тип документа:");
+        Console.WriteLine("1. Word");
+        Console.WriteLine("2. PDF");
+        Console.WriteLine("3. Excel");
+        Console.WriteLine("4. Текстовый файл");
+        Console.WriteLine("5. HTML");
+        Console.Write("> ");
+        
+        string type = Console.ReadLine();
+        Document newDoc;
+        
+        if (type == "1")
+        {
+            newDoc = new WordDoc();
+        }
+        else if (type == "2")
+        {
+            newDoc = new PdfDoc();
+        }
+        else if (type == "3")
+        {
+            newDoc = new ExcelDoc();
+        }
+        else if (type == "4")
+        {
+            newDoc = new TxtDoc();
+        }
+        else if (type == "5")
+        {
+            newDoc = new HtmlDoc();
+        }
+        else
+        {
+            Console.WriteLine("Неверный выбор!");
+            return;
+        }
+        
+        // Заполняем общие данные
+        Console.Write("Введите название: ");
+        newDoc.Name = Console.ReadLine();
+        
+        Console.Write("Введите автора: ");
+        newDoc.Author = Console.ReadLine();
+        
+        Console.Write("Введите тему: ");
+        newDoc.Topic = Console.ReadLine();
+        
+        Console.Write("Введите путь: ");
+        newDoc.Path = Console.ReadLine();
+        
+        Console.Write("Введите ключевые слова через запятую: ");
+        string words = Console.ReadLine();
+        newDoc.Keywords.AddRange(words.Split(','));
+        
+        // Заполняем специальные данные
+        if (newDoc is WordDoc word)
+        {
+            Console.Write("Сколько страниц? ");
+            word.Pages = int.Parse(Console.ReadLine());
+        }
+        else if (newDoc is PdfDoc pdf)
+        {
+            Console.Write("Есть защита? (да/нет): ");
+            pdf.IsProtected = Console.ReadLine().ToLower() == "да";
+        }
+        else if (newDoc is ExcelDoc excel)
+        {
+            Console.Write("Сколько листов? ");
+            excel.Sheets = int.Parse(Console.ReadLine());
+        }
+        else if (newDoc is TxtDoc txt)
+        {
+            Console.Write("Какая кодировка? ");
+            txt.Encoding = Console.ReadLine();
+        }
+        else if (newDoc is HtmlDoc html)
+        {
+            Console.Write("Сколько ссылок? ");
+            html.Links = int.Parse(Console.ReadLine());
+        }
+        
+        AddDocument(newDoc);
+    }
+}
+
+// Главная программа
+class Program
+{
+    static void Main()
+    {
+        Console.WriteLine("Управление документами");
+        
+        // Получаем экземпляр менеджера через специальный метод
+        DocManager manager = DocManager.GetInstance();
+        
+        // Можем получить его еще раз - это будет тот же объект
+        DocManager sameManager = DocManager.GetInstance();
+        
+        Console.WriteLine($"Это один и тот же менеджер? {manager == sameManager}"); // Выведет True
+        
+        manager.ShowMenu();
+    }
+}
