@@ -4,52 +4,60 @@ class Program
 {
     static void Main()
     {
-        Console.WriteLine("Выберите задание (1 или 2):");
+        Console.WriteLine("Выберите задание: 1 или 2");
         string choice = Console.ReadLine();
 
-        switch (choice)
+        if (choice == "1")
         {
-            case "1":
-                Task1();
-                break;
-            case "2":
-                Task2();
-                break;
-            default:
-                Console.WriteLine("Неверный выбор.");
-                break;
+            // Задание 1: Возведение в степень
+            Console.WriteLine("Задание 1: Вычисление a^n");
+            Console.Write("Введите число a: ");
+            int a = Convert.ToInt32(Console.ReadLine());
+            
+            Console.Write("Введите степень n: ");
+            int n = Convert.ToInt32(Console.ReadLine());
+            
+            int answer = 1;
+            for (int i = 0; i < n; i++)
+            {
+                answer = answer * a;
+            }
+            
+            Console.WriteLine(a + "^" + n + " = " + answer);
         }
-    }
-
-    static void Task1()
-    {
-        Console.Write("Введите a (натуральное число): ");
-        int a = int.Parse(Console.ReadLine());
-        Console.Write("Введите n (натуральное число): ");
-        int n = int.Parse(Console.ReadLine());
-
-        int result = 1;
-        for (int i = 0; i < n; i++)
+        else if (choice == "2")
         {
-            result *= a;
+            // Задание 2: Преобразование числа
+            Console.WriteLine("Задание 2: Преобразование числа");
+            Console.Write("Введите число x (от 100): ");
+            string x = Console.ReadLine();
+            
+            // Проверка что число достаточно длинное
+            if (x.Length < 3)
+            {
+                Console.WriteLine("Число слишком короткое!");
+            }
+            else
+            {
+                // Получаем вторую цифру
+                char second = x[1];
+                
+                // Удаляем вторую цифру
+                string part1 = x.Substring(0, 1);   // первая цифра
+                string part2 = x.Substring(2);       // все после второй цифры
+                
+                // Собираем новое число
+                string n = part1 + part2 + second;
+                
+                Console.WriteLine("Получилось число: " + n);
+            }
         }
-
-        Console.WriteLine($"{a}^{n} = {result}");
-    }
-
-    static void Task2()
-    {
-        Console.Write("Введите x (x >= 100): ");
-        string x = Console.ReadLine();
-
-        if (x.Length < 3)
+        else
         {
-            Console.WriteLine("Число должно содержать минимум 3 цифры.");
-            return;
+            Console.WriteLine("Неправильный выбор!");
         }
-
-        char secondDigit = x[1];
-        string newNumber = x.Remove(1, 1) + secondDigit;
-        Console.WriteLine($"n = {newNumber}");
+        
+        Console.WriteLine("Нажмите Enter чтобы выйти...");
+        Console.ReadLine();
     }
 }
